@@ -1,9 +1,12 @@
 package com.alttd.altitudetag.listeners;
 
-import com.alttd.altitudeapi.utils.CollectionUtils;
+import java.util.Optional;
+import java.util.UUID;
+
 import com.alttd.altitudetag.AltitudeTag;
 import com.alttd.altitudetag.configuration.Lang;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -26,10 +29,21 @@ public class ConnectionListener implements Listener
     {
         if (event.getPlayer().getUniqueId().equals(AltitudeTag.getTagger()))
         {
-            AltitudeTag.setTagger(CollectionUtils.randomValue(Bukkit.getOnlinePlayers()).getUniqueId());
-            Lang.YOURE_IT.send(event.getPlayer());
+            if (Bukkit.getOnlinePlayers().size() == 1)
+            {
+                AltitudeTag.setTagger(null);
+            }
+            else
+            {
+                Optional<? extends Player> optional = Bukkit.getOnlinePlayers().stream().filter(p -> p != event.getPlayer()).findAny();
+                if (!optional.isPresent())
+                {
+                    throw new IllegalStateException("There is more than one player on but for some reason they are all: " + event.getPlayer().getUniqueId());
+                }
+                UUID uuid = optional.get().getUniqueId();
+                AltitudeTag.setTagger(uuid);
+                Lang.YOURE_IT.send(event.getPlayer());
+            }
         }
     }
-
-
 }

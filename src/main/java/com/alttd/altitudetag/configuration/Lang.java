@@ -54,8 +54,18 @@ public enum Lang
      * When the console tries to run a player-only command.
      */
     ONLY_PLAYERS("only_players", "Only players can run that command."),
+    /**
+     * Sent to someone when they become it
+     */
     YOURE_IT("youre-it", "You're it! Try to tag someone!"),
-    TAGGED("tagged", "Nice tag! You're up to {tags} tags!");
+    /**
+     * When you tag someone
+     */
+    TAGGED("tagged", "&7Nice tag! You're not it anymore. You're up to &b{tags}&7 tags!"),
+    /**
+     * Broadcast to the server when a new person becomes it.
+     */
+    NEW_TAGGER("new_tagger", "Uh oh, {player} is it! Run!!");
 
     private String[] message;
 

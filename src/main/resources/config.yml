@@ -6,3 +6,42 @@ database:
   database: AltitudeTag
   timeout: 100
   description: 'Altitude Connection'
+leaderboard:
+  enabled: true
+  title: '&b&lAltitude Tag Leaderboard'
+  format: '&6{rank}. &e{player} &7- &e{tags}'
+  top: 10
+  location:
+    world: world
+    x: 10.0
+    y: 50.0
+    z: 10.0
+notification:
+  sound:
+    enabled: false
+    type: ITEM_BREAK
+    join-delay:
+      enabled: true
+      length: 60
+  actionbar:
+    enabled: true
+    message: "&eTag: You're it - tag someone!"
+    duration: -1
+  title:
+    enabled: true
+    message: '&6Tag'
+    duration: 100
+    sub-title:
+      enabled: true
+      message: "&eYou're it!"
+    join-delay:
+      enabled: true
+      length: 60
+  boss-bar:
+    # Options: 0, 6, 10, 12, 20
+    segments: 0
+    percent: 0
+    message: "&eTag: You're it - tag someone!"
+  chat:
+    enabled: false
+    message: "&eTag: You're it - tag someone!"

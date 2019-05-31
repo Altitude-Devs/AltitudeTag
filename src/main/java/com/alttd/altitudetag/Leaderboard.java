@@ -52,6 +52,7 @@ public class Leaderboard
             else
             {
                 sql = "INSERT INTO Players (PlayerUuidMost, PlayerUuidLeast) VALUES (?, ?);";
+
             }
             // prepare the statement
             try (PreparedStatement ps = TagConnection.getConnection().prepareStatement(sql))

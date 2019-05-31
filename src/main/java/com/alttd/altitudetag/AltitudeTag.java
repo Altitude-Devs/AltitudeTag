@@ -3,6 +3,7 @@ package com.alttd.altitudetag;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AltitudeTag extends JavaPlugin
@@ -17,6 +18,21 @@ public class AltitudeTag extends JavaPlugin
     public void onEnable()
     {
         instance = this;
+
+        if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays"))
+        {
+            getLogger().severe("*** HolographicDisplays is not installed or not enabled. ***");
+            getLogger().severe("*** This plugin will be disabled. ***");
+            this.setEnabled(false);
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::updateLeaderboard, 20, 10);
+    }
+
+    private void updateLeaderboard()
+    {
+
     }
 
     /**
@@ -30,6 +46,10 @@ public class AltitudeTag extends JavaPlugin
     {
         UUID prev = instance.tagger;
         instance.tagger = tagger;
+
+        // announce that a new person is it
+        Bukkit.getOnlinePlayers().stream().filter(player -> !player.getUniqueId().equals(tagger)).forEach(player -> player.sendMessage());
+
         return prev;
     }
 

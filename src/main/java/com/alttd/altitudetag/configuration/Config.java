@@ -69,6 +69,9 @@ public final class Config
         updateValue(config, save, "database.timeout", DATABASE_TIMEOUT);
         updateValue(config, save, "database.description", DATABASE_CONNECTION_DESCRIPTION);
 
+        // Notification information
+
+
         if (save.getValue())
         {
             AltitudeTag.getInstance().saveConfig();
