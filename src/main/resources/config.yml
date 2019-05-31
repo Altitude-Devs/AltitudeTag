@@ -17,12 +17,6 @@ leaderboard:
     y: 50.0
     z: 10.0
 notification:
-  sound:
-    enabled: false
-    type: ITEM_BREAK
-    join-delay:
-      enabled: true
-      length: 60
   actionbar:
     enabled: true
     message: "&eTag: You're it - tag someone!"
@@ -37,11 +31,3 @@ notification:
     join-delay:
       enabled: true
       length: 60
-  boss-bar:
-    # Options: 0, 6, 10, 12, 20
-    segments: 0
-    percent: 0
-    message: "&eTag: You're it - tag someone!"
-  chat:
-    enabled: false
-    message: "&eTag: You're it - tag someone!"
