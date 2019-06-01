@@ -17,17 +17,37 @@ leaderboard:
     y: 50.0
     z: 10.0
 notification:
-  actionbar:
-    enabled: true
-    message: "&eTag: You're it - tag someone!"
-    duration: -1
-  title:
-    enabled: true
-    message: '&6Tag'
-    duration: 100
-    sub-title:
+  victim:
+    title:
       enabled: true
-      message: "&eYou're it!"
-    join-delay:
+      message: '&6Tag'
+      duration: 100
+      fade-in: 0
+      fade-out: 0
+      sub-title:
+        enabled: true
+        message: "&eYou're it!"
+      join-delay:
+        enabled: true
+        length: 60
+  attacker:
+    chat:
       enabled: true
-      length: 60
+      message: "&7You just tagged &e{target}&7! You have &e{amount}&7 total tags."
+  global:
+    chat:
+      after-tag:
+        enabled: true
+        message: "&e* {attacker} tagged {target}, run!"
+      other-reason:
+        enabled: true
+        message: "&e* {target} is now 'it'! Don't let them tag you!"
+    boss-bar:
+      enabled: true
+      # Options: 0, 6, 10, 12, 20
+      segments: 0
+      # Blue, Green, Pink, Purple, Red, White, Yellow
+      color: YELLOW
+      # 0-100
+      percent: 0
+      message: "&e{player} is 'it'! Don't let them tag you!"

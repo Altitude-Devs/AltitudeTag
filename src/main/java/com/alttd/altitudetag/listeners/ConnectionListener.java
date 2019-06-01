@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.alttd.altitudetag.AltitudeTag;
-import com.alttd.altitudetag.configuration.Lang;
+import com.alttd.altitudetag.NotificationHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +20,8 @@ public class ConnectionListener implements Listener
         if (AltitudeTag.getTagger() == null)
         {
             AltitudeTag.setTagger(event.getPlayer().getUniqueId());
-            Lang.YOURE_IT.send(event.getPlayer());
+
+            NotificationHandler.sendVictimTitle(event.getPlayer(), true);
         }
     }
 
@@ -42,7 +43,7 @@ public class ConnectionListener implements Listener
                 }
                 UUID uuid = optional.get().getUniqueId();
                 AltitudeTag.setTagger(uuid);
-                Lang.YOURE_IT.send(event.getPlayer());
+                NotificationHandler.sendVictimTitle(optional.get(), false);
             }
         }
     }

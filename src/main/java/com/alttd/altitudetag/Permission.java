@@ -2,8 +2,8 @@ package com.alttd.altitudetag;
 
 public enum Permission
 {
-    PRIORITY_QUEUE("altiqueue.priority-queue"),
-    SKIP_QUEUE("altiqueue.skip-queue"),
+    COMMAND_ADMIN("tag.commands.admin"),
+    COMMAND_ADMIN_LOCATION("tag.commands.admin.location"),
     QUEUE_COMMAND("altiqueue.queue-command");
 
     private String permission;

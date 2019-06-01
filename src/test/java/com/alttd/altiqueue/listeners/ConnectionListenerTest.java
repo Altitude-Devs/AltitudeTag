@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.alttd.altitudetag.AltitudeTag;
-import com.alttd.altitudetag.configuration.Lang;
+import com.alttd.altitudetag.NotificationHandler;
 import com.alttd.altitudetag.listeners.ConnectionListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,21 +14,24 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AltitudeTag.class, Bukkit.class })
+@PrepareForTest({ AltitudeTag.class, Bukkit.class, NotificationHandler.class })
 public class ConnectionListenerTest
 {
     private ConnectionListener listener;
@@ -74,6 +77,9 @@ public class ConnectionListenerTest
         mockStatic(AltitudeTag.class);
         when(AltitudeTag.setTagger(any())).thenCallRealMethod();
 
+        // NotificationHandler is... ah you get the point
+        mockStatic(NotificationHandler.class);
+
         // do return players when Bukkit.getOnlinePlayers() is called
         doReturn(players).when(Bukkit.class);
         Bukkit.getOnlinePlayers();
@@ -93,11 +99,9 @@ public class ConnectionListenerTest
 
         listener.onJoin(joinEvent);
 
-        ArgumentCaptor<String[]> argument = ArgumentCaptor.forClass(String[].class);
-        verify(player, times(1)).sendMessage(argument.capture());
-        assertArrayEquals(Lang.YOURE_IT.getMessage(), argument.getValue());
-
         assertSame(playerUuid, AltitudeTag.getTagger());
+        verifyStatic(NotificationHandler.class, times(1));
+        NotificationHandler.sendVictimTitle(player, true);
     }
 
     @Test

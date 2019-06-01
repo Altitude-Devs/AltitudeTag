@@ -1,11 +1,12 @@
 package com.alttd.altiqueue.listeners;
 
+import java.util.Collections;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 import com.alttd.altitudetag.AltitudeTag;
-import com.alttd.altitudetag.configuration.Lang;
 import com.alttd.altitudetag.listeners.InteractListener;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
@@ -33,7 +34,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AltitudeTag.class })
+@PrepareForTest({ AltitudeTag.class, Bukkit.class })
 public class InteractListenerTest
 {
     private InteractListener listener;
@@ -50,6 +51,9 @@ public class InteractListenerTest
     public void setup()
     {
         listener = new InteractListener();
+
+        mockStatic(Bukkit.class);
+        when(Bukkit.getOnlinePlayers()).thenReturn(Collections.emptyList());
     }
 
     private void setup_both_players()
@@ -100,9 +104,7 @@ public class InteractListenerTest
         Consumer<Integer> getTagsConsumer = consumerCaptor.getValue();
         getTagsConsumer.accept(10);
 
-        verify(attacker, times(1)).sendMessage(Lang.TAGGED.getMessage("{tags}", 10));
         assertEquals(victimUuid, AltitudeTag.getTagger());
-        verify(victim, times(1)).sendMessage(Lang.YOURE_IT.getMessage());
     }
 
     @Test
@@ -141,8 +143,6 @@ public class InteractListenerTest
         verify(attacker, never()).sendMessage((String[]) any());
 
         assertEquals(victimUuid, AltitudeTag.getTagger());
-
-        verify(victim, times(1)).sendMessage(Lang.YOURE_IT.getMessage());
     }
 
     @Test
@@ -173,7 +173,6 @@ public class InteractListenerTest
         AltitudeTag.getTags(any(), any());
 
         assertEquals(victimUuid, AltitudeTag.getTagger());
-        verify(victim, times(1)).sendMessage(Lang.YOURE_IT.getMessage());
     }
 
     @Test

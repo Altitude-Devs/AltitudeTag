@@ -4,22 +4,33 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import com.alttd.altitudetag.configuration.Config;
+import com.alttd.altitudetag.configuration.Lang;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class Leaderboard
 {
+    private static Hologram hologram;
+
     public static void initialize()
     {
         //language=SQL
-        String sql = "CREATE TABLE IF NOT EXISTS Players ("
-                     + " PlayerId INT NOT NULL AUTO_INCREMENT,"
-                     + " PlayerUuidMost BIGINT NOT NULL,"
-                     + " PlayerUuidLeast BIGINT NOT NULL,"
-                     + " PlayerTags INT NOT NULL DEFAULT(1),"
-                     + " PRIMARY KEY (PlayerId)" +
+        String sql = "CREATE TABLE IF NOT EXISTS Player ("
+                     + " player_id INT NOT NULL AUTO_INCREMENT,"
+                     + " player_uuid VARCHAR(36) NOT NULL,"
+                     + " player_tags INT NOT NULL DEFAULT 0,"
+                     + " player_active BIT NOT NULL DEFAULT 1,"
+                     + " PRIMARY KEY (player_id),"
+                     + " CONSTRAINT uuid_unique UNIQUE (player_uuid)" +
                      ");";
 
         try
@@ -31,6 +42,8 @@ public class Leaderboard
         {
             ex.printStackTrace();
         }
+
+        initializeLeaderboard();
     }
 
     /**
@@ -45,24 +58,18 @@ public class Leaderboard
         {
             String sql;
             // if they've tagged before we want to update rather than insert
-            if (hasTagged(uuid))
-            {
-                sql = "UPDATE Players SET PlayerTags = PlayerTags + 1 WHERE PlayerUuidMost = ? AND PlayerUuidLeast = ?;";
-            }
-            else
-            {
-                sql = "INSERT INTO Players (PlayerUuidMost, PlayerUuidLeast) VALUES (?, ?);";
+            sql = "INSERT INTO Player (player_uuid, player_tags) VALUES (?, 1) ON DUPLICATE KEY UPDATE player_tags = player_tags + 1";
 
-            }
             // prepare the statement
             try (PreparedStatement ps = TagConnection.getConnection().prepareStatement(sql))
             {
                 // set the parameters
-                ps.setLong(1, uuid.getMostSignificantBits());
-                ps.setLong(2, uuid.getLeastSignificantBits());
+                ps.setString(1, uuid.toString());
 
                 // execute the code
                 ps.execute();
+
+                refreshLeaderboard();
 
                 // run the runnable if it's not null
                 if (runnable != null)
@@ -86,12 +93,11 @@ public class Leaderboard
     {
         Bukkit.getScheduler().runTaskAsynchronously(AltitudeTag.getInstance(), () ->
         {
-            String sql = "SELECT PlayerTags FROM Players WHERE PlayerUuidMost = ? AND PlayerUuidLeast = ?;";
+            String sql = "SELECT player_tags FROM Player WHERE player_uuid = ?;";
 
             try (PreparedStatement ps = TagConnection.getConnection().prepareStatement(sql))
             {
-                ps.setLong(1, uuid.getMostSignificantBits());
-                ps.setLong(2, uuid.getLeastSignificantBits());
+                ps.setString(1, uuid.toString());
 
                 ResultSet rs = ps.getResultSet();
 
@@ -109,24 +115,84 @@ public class Leaderboard
         });
     }
 
-    public static boolean hasTagged(UUID uuid)
+    /**
+     * Sets the location of the leaderboard. Changes will also be saved to the config file.
+     *
+     * @param location the new location for the leaderboard.
+     */
+    public static void setLocation(Location location)
     {
-        String sql = "SELECT COUNT(*) FROM Players WHERE PlayerUuidMost = ? AND PlayerUuidLeast = ?;";
+        Config.LEADERBOARD_LOCATION_WORLD.setValue(location.getWorld().getName());
+        Config.LEADERBOARD_LOCATION_X.setValue(location.getX());
+        Config.LEADERBOARD_LOCATION_Y.setValue(location.getY());
+        Config.LEADERBOARD_LOCATION_Z.setValue(location.getZ());
 
-        try (PreparedStatement ps = TagConnection.getConnection().prepareStatement(sql))
+        FileConfiguration config = AltitudeTag.getInstance().getConfig();
+        config.set("leaderboard.location.world", Config.LEADERBOARD_LOCATION_WORLD.getValue());
+        config.set("leaderboard.location.x", Config.LEADERBOARD_LOCATION_X.getValue());
+        config.set("leaderboard.location.y", Config.LEADERBOARD_LOCATION_Y.getValue());
+        config.set("leaderboard.location.z", Config.LEADERBOARD_LOCATION_Z.getValue());
+        AltitudeTag.getInstance().saveConfig();
+
+        hologram.delete();
+        initializeLeaderboard();
+    }
+
+    private static void initializeLeaderboard()
+    {
+        if (Config.LEADERBOARD_ENABLED.getValue())
         {
-            ps.setLong(1, uuid.getMostSignificantBits());
-            ps.setLong(2, uuid.getLeastSignificantBits());
+            hologram = HologramsAPI.createHologram(AltitudeTag.getInstance(),
+                                                   new Location(Bukkit.getWorld(Config.LEADERBOARD_LOCATION_WORLD.getValue()),
+                                                                Config.LEADERBOARD_LOCATION_X.getValue(),
+                                                                Config.LEADERBOARD_LOCATION_Y.getValue(),
+                                                                Config.LEADERBOARD_LOCATION_Z.getValue()));
+            hologram.appendTextLine(Config.LEADERBOARD_TITLE.getValue());
 
-            ResultSet rs = ps.getResultSet();
+            for (int i = 0; i < Config.LEADERBOARD_TOP.getValue(); i++)
+            {
+                hologram.appendTextLine("");
+            }
 
-            return rs.next() && rs.getInt(1) > 0;
+            refreshLeaderboard();
         }
-        catch (SQLException ex)
+    }
+
+    private static void refreshLeaderboard()
+    {
+        if (Config.LEADERBOARD_ENABLED.getValue())
         {
-            ex.printStackTrace();
-        }
+            Objects.requireNonNull(hologram);
 
-        return false;
+            Bukkit.getScheduler().runTaskAsynchronously(AltitudeTag.getInstance(), () ->
+            {
+                String sql = "SELECT player_uuid, player_tags FROM Player LIMIT ?";
+                try (PreparedStatement ps = TagConnection.getConnection().prepareStatement(sql))
+                {
+                    ps.setInt(1, Config.LEADERBOARD_TOP.getValue());
+                    ResultSet rs = ps.getResultSet();
+                    for (int i = 0; i < Config.LEADERBOARD_TOP.getValue(); i++)
+                    {
+                        String text;
+                        if (rs.next())
+                        {
+                            text = Lang.renderString(Config.LEADERBOARD_FORMAT.getValue(),
+                                                     "{rank}", i,
+                                                     "{player}", Bukkit.getOfflinePlayer(UUID.fromString(rs.getString("player_uuid"))),
+                                                     "{tags}", rs.getInt("player_tags"));
+                        }
+                        else
+                        {
+                            text = "";
+                        }
+                        ((TextLine) hologram.getLine(i)).setText(text);
+                    }
+                }
+                catch (SQLException ex)
+                {
+                    ex.printStackTrace();
+                }
+            });
+        }
     }
 }

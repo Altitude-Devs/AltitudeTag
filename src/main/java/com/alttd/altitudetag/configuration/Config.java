@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.alttd.altitudeapi.utils.MutableValue;
 import com.alttd.altitudetag.AltitudeTag;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public final class Config
@@ -46,7 +47,45 @@ public final class Config
     /**
      * The description given to a connection if the DBMS supports that feature.
      */
-    public static final MutableValue<String> DATABASE_CONNECTION_DESCRIPTION = new MutableValue<>("Altitude Connection");
+    public static final MutableValue<String> DATABASE_DESCRIPTION = new MutableValue<>("Altitude Connection");
+
+    public static final MutableValue<Boolean> LEADERBOARD_ENABLED = new MutableValue<>(true);
+    public static final MutableValue<String>  LEADERBOARD_TITLE   = new MutableValue<>("&b&lAltitude Tag Leaderboard");
+    public static final MutableValue<String>  LEADERBOARD_FORMAT  = new MutableValue<>("&6{rank}. &e{player} &7- &e{tags}");
+    public static final MutableValue<Integer> LEADERBOARD_TOP     = new MutableValue<>(10);
+
+    public static final MutableValue<String> LEADERBOARD_LOCATION_WORLD = new MutableValue<>("world");
+    public static final MutableValue<Double> LEADERBOARD_LOCATION_X     = new MutableValue<>(10.0);
+    public static final MutableValue<Double> LEADERBOARD_LOCATION_Y     = new MutableValue<>(50.0);
+    public static final MutableValue<Double> LEADERBOARD_LOCATION_Z     = new MutableValue<>(10.0);
+
+    public static final MutableValue<Boolean> NOTIFICATION_VICTIM_TITLE_ENABLED  = new MutableValue<>(true);
+    public static final MutableValue<String>  NOTIFICATION_VICTIM_TITLE_MESSAGE  = new MutableValue<>("&6Tag");
+    public static final MutableValue<Integer> NOTIFICATION_VICTIM_TITLE_DURATION = new MutableValue<>(100);
+    public static final MutableValue<Integer> NOTIFICATION_VICTIM_TITLE_FADE_IN  = new MutableValue<>(0);
+    public static final MutableValue<Integer> NOTIFICATION_VICTIM_TITLE_FADE_OUT = new MutableValue<>(0);
+
+    public static final MutableValue<Boolean> NOTIFICATION_VICTIM_TITLE_SUB_TITLE_ENABLED = new MutableValue<>(true);
+    public static final MutableValue<String>  NOTIFICATION_VICTIM_TITLE_SUB_TITLE_MESSAGE = new MutableValue<>("&eYou're it!");
+
+    public static final MutableValue<Boolean> NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_ENABLED = new MutableValue<>(true);
+    public static final MutableValue<Integer> NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_LENGTH  = new MutableValue<>(60);
+
+    public static final MutableValue<Boolean> NOTIFICATION_ATTACKER_CHAT_ENABLED = new MutableValue<>(true);
+    public static final MutableValue<String>  NOTIFICATION_ATTACKER_CHAT_MESSAGE = new MutableValue<>("&7You just tagged &e{target}&7! You have &e{amount}&7 total tags.");
+
+    public static final MutableValue<Boolean> NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_ENABLED = new MutableValue<>(true);
+    public static final MutableValue<String>  NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_MESSAGE = new MutableValue<>("&e* {attacker} tagged {target}, run!");
+
+    public static final MutableValue<Boolean> NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_ENABLED = new MutableValue<>(true);
+    public static final MutableValue<String>  NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_MESSAGE = new MutableValue<>("&e*{target} is it now, run!");
+
+    public static final MutableValue<Boolean> NOTIFICATION_GLOBAL_BOSS_BAR_ENABLED  = new MutableValue<>(true);
+    public static final MutableValue<Integer> NOTIFICATION_GLOBAL_BOSS_BAR_SEGMENTS = new MutableValue<>(0);
+    public static final MutableValue<String>  NOTIFICATION_GLOBAL_BOSS_BAR_COLOR    = new MutableValue<>("YELLOW");
+    public static final MutableValue<Integer> NOTIFICATION_GLOBAL_BOSS_BAR_PERCENT  = new MutableValue<>(0);
+    public static final MutableValue<String>  NOTIFICATION_GLOBAL_BOSS_BAR_MESSAGE  = new MutableValue<>("&e{player} is 'it'! Don't let them tag you!");
+
 
     /**
      * Update the values from the config file.
@@ -67,10 +106,39 @@ public final class Config
         updateValue(config, save, "database.password", DATABASE_PASSWORD);
         updateValue(config, save, "database.database", DATABASE_DATABASE);
         updateValue(config, save, "database.timeout", DATABASE_TIMEOUT);
-        updateValue(config, save, "database.description", DATABASE_CONNECTION_DESCRIPTION);
+        updateValue(config, save, "database.description", DATABASE_DESCRIPTION);
 
-        // Notification information
+        // leaderboard values
+        updateValue(config, save, "leaderboard.enabled", LEADERBOARD_ENABLED);
+        updateValue(config, save, "leaderboard.title", LEADERBOARD_TITLE);
+        updateValue(config, save, "leaderboard.format", LEADERBOARD_FORMAT);
+        updateValue(config, save, "leaderboard.top", LEADERBOARD_TOP);
+        updateValue(config, save, "leaderboard.location.world", LEADERBOARD_LOCATION_WORLD);
+        updateValue(config, save, "leaderboard.location.x", LEADERBOARD_LOCATION_X);
+        updateValue(config, save, "leaderboard.location.y", LEADERBOARD_LOCATION_Y);
+        updateValue(config, save, "leaderboard.location.z", LEADERBOARD_LOCATION_Z);
 
+        // notification values
+        updateValue(config, save, "notification.victim.title.enabled", NOTIFICATION_VICTIM_TITLE_ENABLED);
+        updateValue(config, save, "notification.victim.title.message", NOTIFICATION_VICTIM_TITLE_MESSAGE);
+        updateValue(config, save, "notification.victim.title.duration", NOTIFICATION_VICTIM_TITLE_DURATION);
+        updateValue(config, save, "notification.victim.title.fade-in", NOTIFICATION_VICTIM_TITLE_FADE_IN);
+        updateValue(config, save, "notification.victim.title.fade-out", NOTIFICATION_VICTIM_TITLE_FADE_OUT);
+        updateValue(config, save, "notification.victim.title.sub-title.enabled", NOTIFICATION_VICTIM_TITLE_SUB_TITLE_ENABLED);
+        updateValue(config, save, "notification.victim.title.sub-title.message", NOTIFICATION_VICTIM_TITLE_SUB_TITLE_MESSAGE);
+        updateValue(config, save, "notification.victim.title.join-delay.enabled", NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_ENABLED);
+        updateValue(config, save, "notification.victim.title.join-delay.length", NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_LENGTH);
+        updateValue(config, save, "notification.attacker.chat.enabled", NOTIFICATION_ATTACKER_CHAT_ENABLED);
+        updateValue(config, save, "notification.attacker.chat.message", NOTIFICATION_ATTACKER_CHAT_MESSAGE);
+        updateValue(config, save, "notification.global.chat.after-tag.enabled", NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_ENABLED);
+        updateValue(config, save, "notification.global.chat.after-tag.message", NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_MESSAGE);
+        updateValue(config, save, "notification.global.chat.other-reason.enabled", NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_ENABLED);
+        updateValue(config, save, "notification.global.chat.other-reason.message", NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_MESSAGE);
+        updateValue(config, save, "notification.global.boss-bar.enabled", NOTIFICATION_GLOBAL_BOSS_BAR_ENABLED);
+        updateValue(config, save, "notification.global.boss-bar.segments", NOTIFICATION_GLOBAL_BOSS_BAR_SEGMENTS);
+        updateValue(config, save, "notification.global.boss-bar.color", NOTIFICATION_GLOBAL_BOSS_BAR_COLOR);
+        updateValue(config, save, "notification.global.boss-bar.percent", NOTIFICATION_GLOBAL_BOSS_BAR_PERCENT);
+        updateValue(config, save, "notification.global.boss-bar.message", NOTIFICATION_GLOBAL_BOSS_BAR_MESSAGE);
 
         if (save.getValue())
         {
@@ -149,7 +217,7 @@ public final class Config
         }
         else if (clazz == String.class)
         {
-            return (T) config.getString(location);
+            return (T) ChatColor.translateAlternateColorCodes('&', config.getString(location));
         }
         else if (clazz == Boolean.class)
         {

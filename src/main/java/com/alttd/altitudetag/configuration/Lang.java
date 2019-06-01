@@ -27,14 +27,6 @@ public enum Lang
      */
     USAGE("usage_message", "&6&lUSAGE &e» &f{usage}"),
     /**
-     * The prefix to an error message.
-     */
-    ERROR("error_message", "&4&lERROR &c» &7{message}"),
-    /**
-     * The prefix to a success message.
-     */
-    SUCCESS("success_message", "&2&lSUCCESS &a» &f{message}"),
-    /**
      * When players do not have permission to do something.
      */
     NO_PERMS("no_permissions", "You don't have permission to do that."),
@@ -54,18 +46,7 @@ public enum Lang
      * When the console tries to run a player-only command.
      */
     ONLY_PLAYERS("only_players", "Only players can run that command."),
-    /**
-     * Sent to someone when they become it
-     */
-    YOURE_IT("youre-it", "You're it! Try to tag someone!"),
-    /**
-     * When you tag someone
-     */
-    TAGGED("tagged", "&7Nice tag! You're not it anymore. You're up to &b{tags}&7 tags!"),
-    /**
-     * Broadcast to the server when a new person becomes it.
-     */
-    NEW_TAGGER("new_tagger", "Uh oh, {player} is it! Run!!");
+    SET_LEADERBOARD_LOCATION("set_leaderboard_location", "Successfully set the leaderboard location.");
 
     private String[] message;
 
@@ -131,48 +112,6 @@ public enum Lang
     }
 
     /**
-     * Sends this Lang object but prepended with the ERROR value as well.
-     *
-     * @param sender     the CommandSender receiving the message.
-     * @param parameters all additional arguments to fill placeholders.
-     */
-    public void sendError(CommandSender sender, Object... parameters)
-    {
-        for (String line : getMessage(parameters))
-        {
-            ERROR.send(sender, "{message}", line);
-        }
-    }
-
-    /**
-     * Sends this Lang object but prepended with the SUCCESS value as well.
-     *
-     * @param sender     the CommandSender receiving the message.
-     * @param parameters all additional arguments to fill placeholders.
-     */
-    public void sendSuccess(CommandSender sender, Object... parameters)
-    {
-        for (String line : getMessage(parameters))
-        {
-            SUCCESS.send(sender, "{message}", line);
-        }
-    }
-
-    /**
-     * Sends this Lang object but prepended with the PREFIX value as well.
-     *
-     * @param sender     the CommandSender receiving the message.
-     * @param parameters all additional arguments to fill placeholders.
-     */
-    public void sendInfo(CommandSender sender, Object... parameters)
-    {
-        for (String line : getMessage(parameters))
-        {
-            PREFIX.send(sender, "{message}", line);
-        }
-    }
-
-    /**
      * Renders this message and returns it. Similar behavior to {@link #send(CommandSender, Object...)}, but instead of sending the message, it simply returns it.
      *
      * @param parameters all additional arguments to fill placeholders.
@@ -197,7 +136,7 @@ public enum Lang
      *
      * @return the rendered string.
      */
-    protected String renderString(String string, Object... args)
+    public static String renderString(String string, Object... args)
     {
         if (args.length % 2 != 0)
         {
@@ -241,15 +180,5 @@ public enum Lang
     private static void error(String location)
     {
         AltitudeTag.getInstance().getLogger().severe("Error loading the lang value '" + location + "'. Reverted it to default.");
-    }
-
-    public static void sendUsageMessage(CommandSender sender, String[] label, String[] parameters)
-    {
-        StringBuilder args = new StringBuilder("/" + StringUtils.compile(label));
-        for (String str : parameters)
-        {
-            args.append(" [").append(str).append("]");
-        }
-        USAGE.send(sender, "{usage}", args.toString());
     }
 }

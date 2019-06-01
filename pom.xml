@@ -14,8 +14,8 @@
     <dependencies>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper</artifactId>
-            <version>1.14.1-R0.1-SNAPSHOT</version>
+            <artifactId>paper-api</artifactId>
+            <version>1.14.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.alttd</groupId>

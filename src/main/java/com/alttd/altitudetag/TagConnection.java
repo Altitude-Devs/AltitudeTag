@@ -17,6 +17,7 @@ public class TagConnection
     private String username;
     private String password;
     private int    port;
+    private String description;
 
     private TagConnection()
     {
@@ -25,6 +26,7 @@ public class TagConnection
         this.username = Config.DATABASE_USERNAME.getValue();
         this.password = Config.DATABASE_PASSWORD.getValue();
         this.port = Config.DATABASE_PORT.getValue();
+        this.description = Config.DATABASE_DESCRIPTION.getValue();
 
         try
         {

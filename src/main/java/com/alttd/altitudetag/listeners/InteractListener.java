@@ -1,7 +1,7 @@
 package com.alttd.altitudetag.listeners;
 
 import com.alttd.altitudetag.AltitudeTag;
-import com.alttd.altitudetag.configuration.Lang;
+import com.alttd.altitudetag.NotificationHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,31 +14,25 @@ public class InteractListener implements Listener
     {
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player)
         {
-            Player tagger = (Player) event.getDamager();
-            Player tagged = (Player) event.getEntity();
+            final Player tagger = (Player) event.getDamager();
+            final Player tagged = (Player) event.getEntity();
 
             // add the new tag
             AltitudeTag.addTag(tagger.getUniqueId(), () ->
             {
-                // if they're still online...
-                if (tagger.isOnline())
+                // if they left, we can stop
+                if (!tagger.isOnline())
                 {
-                    // get their tags...
-                    AltitudeTag.getTags(tagger.getUniqueId(), (tags) ->
-                    {
-                        // if they're still online...
-                        if (tagger.isOnline())
-                        {
-                            // let em know how they're doing!
-                            Lang.TAGGED.send(tagger, "{tags}", tags);
-                        }
-                    });
+                    return;
                 }
+                NotificationHandler.sendTaggerNotifications(tagger, tagged.getName());
             });
 
             AltitudeTag.setTagger(tagged.getUniqueId());
 
-            Lang.YOURE_IT.send(tagged);
+            NotificationHandler.sendVictimTitle(tagged, false);
+
+            NotificationHandler.sendGlobalNotifications(tagger.getName(), tagged.getName());
         }
     }
 }

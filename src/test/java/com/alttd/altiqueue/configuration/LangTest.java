@@ -26,7 +26,7 @@ public class LangTest
     {
         for (Lang lang : Lang.values())
         {
-            System.out.println(lang.getPath() + ": \"" + lang.getRawMessageCompiled() + "\"");
+            //System.out.println(lang.getPath() + ": \"" + lang.getRawMessageCompiled() + "\"");
         }
         for (Lang lang : Lang.values())
         {
