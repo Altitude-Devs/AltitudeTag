@@ -49,7 +49,7 @@ notification:
       # Blue, Green, Pink, Purple, Red, White, Yellow
       color: YELLOW
       # 0-100
-      percent: 0
+      percent: 100
       message: "&e{player} is 'it'! Don't let them tag you!"
 tag-backs:
   track-leaderboard: false

@@ -60,5 +60,7 @@ public class InteractListener implements Listener
         AltitudeTag.setTagger(tagged.getUniqueId(), TagCause.NORMAL);
 
         NotificationHandler.sendVictimTitle(tagged, false);
+
+        lastTagTime = System.currentTimeMillis();
     }
 }
