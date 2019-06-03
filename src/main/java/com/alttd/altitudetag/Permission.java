@@ -3,8 +3,7 @@ package com.alttd.altitudetag;
 public enum Permission
 {
     COMMAND_ADMIN("tag.commands.admin"),
-    COMMAND_ADMIN_LOCATION("tag.commands.admin.location"),
-    QUEUE_COMMAND("altiqueue.queue-command");
+    COMMAND_ADMIN_LOCATION("tag.commands.admin.location");
 
     private String permission;
 

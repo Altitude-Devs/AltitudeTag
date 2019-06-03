@@ -20,8 +20,10 @@ public class ConnectionListener implements Listener
         if (AltitudeTag.getTagger() == null)
         {
             AltitudeTag.setTagger(event.getPlayer().getUniqueId());
-
-            NotificationHandler.sendVictimTitle(event.getPlayer(), true);
+        }
+        if (AltitudeTag.getBossBar() != null)
+        {
+            AltitudeTag.getBossBar().addPlayer(event.getPlayer());
         }
     }
 

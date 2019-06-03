@@ -11,7 +11,7 @@ public class TagCommand extends ValidBaseCommand
 {
     public TagCommand()
     {
-        super("tag", "Tag, you're it!", new String[]{ "tags", "tagging", "tagger" });
+        super("tag", "Tag, you're it!", "tag.play", new String[]{ "tags", "tagging", "tagger" });
 
         addSubCommand(new TagAdminCommand());
     }

@@ -68,18 +68,26 @@ public class NotificationHandler
     {
         if (attacker == null && Config.NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_ENABLED.getValue())
         {
+            // TODO make this actually do what it's supposed to
             Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(Lang.renderString(Config.NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_MESSAGE.getValue(),
-                                                                                   "{victim}", victim)));
+                                                                                   "{target}", victim)));
         }
         if (attacker != null && Config.NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_ENABLED.getValue())
         {
             Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(Lang.renderString(Config.NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_MESSAGE.getValue(),
-                                                                                   "{victim}", victim,
+                                                                                   "{target}", victim,
                                                                                    "{attacker}", attacker)));
+        }
+
+        if (Config.NOTIFICATION_GLOBAL_BOSS_BAR_ENABLED.getValue())
+        {
+            AltitudeTag.getBossBar().setTitle(Lang.renderString(Config.NOTIFICATION_GLOBAL_BOSS_BAR_MESSAGE.getValue(), "{player}", victim,
+                                                                BarUtils.parseBarColor(Config.NOTIFICATION_GLOBAL_BOSS_BAR_COLOR.getValue()),
+                                                                BarUtils.parseBarStyle(Config.NOTIFICATION_GLOBAL_BOSS_BAR_SEGMENTS.getValue())));
         }
     }
 
-    public static void sendBossBar()
+    public static void loadBossBar()
     {
         if (Config.NOTIFICATION_GLOBAL_BOSS_BAR_ENABLED.getValue())
         {

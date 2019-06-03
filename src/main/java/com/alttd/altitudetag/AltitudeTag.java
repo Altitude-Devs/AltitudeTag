@@ -1,5 +1,6 @@
 package com.alttd.altitudetag;
 
+import java.io.File;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -12,6 +13,7 @@ import com.alttd.altitudetag.listeners.ConnectionListener;
 import com.alttd.altitudetag.listeners.InteractListener;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AltitudeTag extends JavaPlugin
@@ -37,7 +39,7 @@ public class AltitudeTag extends JavaPlugin
             return;
         }
 
-        Lang.update();
+        reloadConfiguration();
 
         // update the CommandLang values
         CommandLang.NO_PERMISSION.setValue(Lang.NO_PERMS.getRawMessage()[0]);
@@ -46,15 +48,45 @@ public class AltitudeTag extends JavaPlugin
         CommandLang.ONLY_PLAYERS.setValue(Lang.ONLY_PLAYERS.getRawMessage()[0]);
         CommandLang.USAGE_FORMAT.setValue(Lang.USAGE.getRawMessage()[0]);
 
-        Config.update();
-        TagConnection.initialize();
+        try
+        {
+            TagConnection.initialize();
+        }
+        catch (Exception ex)
+        {
+            getLogger().severe("*** Could not connect to the database. ***");
+            getLogger().severe("*** This plugin will be disabled. ***");
+            this.setEnabled(false);
+            return;
+        }
         Leaderboard.initialize();
+
+        NotificationHandler.loadBossBar();
 
         CommandHandler.initialize();
         CommandHandler.getInstance().registerCommand(new TagCommand(), this);
 
         Bukkit.getPluginManager().registerEvents(new ConnectionListener(), this);
         Bukkit.getPluginManager().registerEvents(new InteractListener(), this);
+    }
+
+    private static void reloadConfiguration()
+    {
+        // check lang
+        File langFile = new File(instance.getDataFolder(), "lang.yml");
+        if (!langFile.exists())
+        {
+            instance.saveResource("lang.yml", false);
+        }
+        Lang.update();
+
+        // check config
+        File configFile = new File(instance.getDataFolder(), "config.yml");
+        if (!configFile.exists())
+        {
+            instance.saveDefaultConfig();
+        }
+        Config.update();
     }
 
     public static BossBar getBossBar()
@@ -68,24 +100,6 @@ public class AltitudeTag extends JavaPlugin
     }
 
     /**
-     * Set the current tagger.
-     *
-     * @param tagger the new tagger.
-     *
-     * @return the previous tagger.
-     */
-    public static UUID setTagger(UUID tagger)
-    {
-        UUID prev = instance.tagger;
-        instance.tagger = tagger;
-
-        // announce that a new person is it
-        Bukkit.getOnlinePlayers().stream().filter(player -> !player.getUniqueId().equals(tagger)).forEach(player -> player.sendMessage());
-
-        return prev;
-    }
-
-    /**
      * Returns the current tagger.
      *
      * @return the current tagger.
@@ -93,6 +107,25 @@ public class AltitudeTag extends JavaPlugin
     public static UUID getTagger()
     {
         return instance.tagger;
+    }
+
+    /**
+     * Set the current tagger.
+     *
+     * @param tagger the new tagger.
+     */
+    public static void setTagger(UUID tagger)
+    {
+        // announce that a new person is it
+        Player previousPlayer = Bukkit.getPlayer(instance.tagger);
+
+        if (tagger != null)
+        {
+            NotificationHandler.sendGlobalNotifications(previousPlayer != null
+                                                        ? previousPlayer.getName()
+                                                        : null, Bukkit.getPlayer(tagger).getName());
+        }
+        instance.tagger = tagger;
     }
 
     /**

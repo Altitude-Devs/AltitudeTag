@@ -43,7 +43,7 @@ public class Leaderboard
             ex.printStackTrace();
         }
 
-        initializeLeaderboard();
+        Bukkit.getScheduler().runTaskLater(AltitudeTag.getInstance(), Leaderboard::initializeLeaderboard, 20);
     }
 
     /**
@@ -99,9 +99,9 @@ public class Leaderboard
             {
                 ps.setString(1, uuid.toString());
 
-                ResultSet rs = ps.getResultSet();
+                ResultSet rs = ps.executeQuery();
 
-                if (rs.next())
+                if (rs != null && rs.next())
                 {
                     // call the consumer when the query returns back
                     consumer.accept(rs.getInt(1));
@@ -134,8 +134,8 @@ public class Leaderboard
         config.set("leaderboard.location.z", Config.LEADERBOARD_LOCATION_Z.getValue());
         AltitudeTag.getInstance().saveConfig();
 
-        hologram.delete();
-        initializeLeaderboard();
+        hologram.teleport(location);
+        refreshLeaderboard();
     }
 
     private static void initializeLeaderboard()
@@ -160,8 +160,11 @@ public class Leaderboard
 
     private static void refreshLeaderboard()
     {
-        if (Config.LEADERBOARD_ENABLED.getValue())
+        if (!Config.LEADERBOARD_ENABLED.getValue())
         {
+            return;
+        }
+        
             Objects.requireNonNull(hologram);
 
             Bukkit.getScheduler().runTaskAsynchronously(AltitudeTag.getInstance(), () ->
@@ -170,22 +173,26 @@ public class Leaderboard
                 try (PreparedStatement ps = TagConnection.getConnection().prepareStatement(sql))
                 {
                     ps.setInt(1, Config.LEADERBOARD_TOP.getValue());
-                    ResultSet rs = ps.getResultSet();
+                ResultSet rs = ps.executeQuery();
                     for (int i = 0; i < Config.LEADERBOARD_TOP.getValue(); i++)
                     {
+                    final int finalInt = i;
                         String text;
-                        if (rs.next())
+                    if (rs != null && rs.next())
                         {
                             text = Lang.renderString(Config.LEADERBOARD_FORMAT.getValue(),
                                                      "{rank}", i,
-                                                     "{player}", Bukkit.getOfflinePlayer(UUID.fromString(rs.getString("player_uuid"))),
+                                                 "{player}", Bukkit.getOfflinePlayer(UUID.fromString(rs.getString("player_uuid"))).getName(),
                                                      "{tags}", rs.getInt("player_tags"));
                         }
                         else
                         {
                             text = "";
                         }
-                        ((TextLine) hologram.getLine(i)).setText(text);
+                    if (!((TextLine) hologram.getLine(finalInt + 1)).getText().equals(text))
+                    {
+                        Bukkit.getScheduler().runTask(AltitudeTag.getInstance(), () -> ((TextLine) hologram.getLine(finalInt + 1)).setText(text));
+                    }
                     }
                 }
                 catch (SQLException ex)
@@ -193,6 +200,6 @@ public class Leaderboard
                     ex.printStackTrace();
                 }
             });
-        }
+
     }
 }

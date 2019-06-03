@@ -19,7 +19,7 @@ public class TagConnection
     private int    port;
     private String description;
 
-    private TagConnection()
+    private TagConnection() throws SQLException, ClassNotFoundException
     {
         this.host = Config.DATABASE_HOSTNAME.getValue();
         this.database = Config.DATABASE_DATABASE.getValue();
@@ -28,14 +28,9 @@ public class TagConnection
         this.port = Config.DATABASE_PORT.getValue();
         this.description = Config.DATABASE_DESCRIPTION.getValue();
 
-        try
-        {
-            instance.openConnection();
-        }
-        catch (SQLException | ClassNotFoundException ex)
-        {
-            ex.printStackTrace();
-        }
+        instance = this;
+
+        instance.openConnection();
     }
 
     private void openConnection() throws SQLException, ClassNotFoundException
@@ -70,7 +65,7 @@ public class TagConnection
         return instance.connection;
     }
 
-    public static void initialize()
+    public static void initialize() throws SQLException, ClassNotFoundException
     {
         instance = new TagConnection();
     }
