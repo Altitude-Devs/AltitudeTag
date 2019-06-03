@@ -165,41 +165,41 @@ public class Leaderboard
             return;
         }
         
-            Objects.requireNonNull(hologram);
+        Objects.requireNonNull(hologram);
 
-            Bukkit.getScheduler().runTaskAsynchronously(AltitudeTag.getInstance(), () ->
+        Bukkit.getScheduler().runTaskAsynchronously(AltitudeTag.getInstance(), () ->
+        {
+            String sql = "SELECT player_uuid, player_tags FROM Player ORDER BY player_tags DESC LIMIT ?";
+            try (PreparedStatement ps = TagConnection.getConnection().prepareStatement(sql))
             {
-                String sql = "SELECT player_uuid, player_tags FROM Player LIMIT ?";
-                try (PreparedStatement ps = TagConnection.getConnection().prepareStatement(sql))
-                {
-                    ps.setInt(1, Config.LEADERBOARD_TOP.getValue());
+                ps.setInt(1, Config.LEADERBOARD_TOP.getValue());
                 ResultSet rs = ps.executeQuery();
-                    for (int i = 0; i < Config.LEADERBOARD_TOP.getValue(); i++)
-                    {
+                for (int i = 0; i < Config.LEADERBOARD_TOP.getValue(); i++)
+                {
                     final int finalInt = i;
-                        String text;
+                    String text;
                     if (rs != null && rs.next())
-                        {
-                            text = Lang.renderString(Config.LEADERBOARD_FORMAT.getValue(),
-                                                     "{rank}", i,
+                    {
+                        text = Lang.renderString(Config.LEADERBOARD_FORMAT.getValue(),
+                                                 "{rank}", i + 1,
                                                  "{player}", Bukkit.getOfflinePlayer(UUID.fromString(rs.getString("player_uuid"))).getName(),
-                                                     "{tags}", rs.getInt("player_tags"));
-                        }
-                        else
-                        {
-                            text = "";
-                        }
+                                                 "{tags}", rs.getInt("player_tags"));
+                    }
+                    else
+                    {
+                        text = "";
+                    }
                     if (!((TextLine) hologram.getLine(finalInt + 1)).getText().equals(text))
                     {
                         Bukkit.getScheduler().runTask(AltitudeTag.getInstance(), () -> ((TextLine) hologram.getLine(finalInt + 1)).setText(text));
                     }
-                    }
                 }
-                catch (SQLException ex)
-                {
-                    ex.printStackTrace();
-                }
-            });
+            }
+            catch (SQLException ex)
+            {
+                ex.printStackTrace();
+            }
+        });
 
     }
 }
