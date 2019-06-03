@@ -13,29 +13,33 @@ public class InteractListener implements Listener
     @EventHandler
     public void onHit(EntityDamageByEntityEvent event)
     {
-        if (event.getDamager() instanceof Player && event.getEntity() instanceof Player)
+        if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player))
         {
-            final Player tagger = (Player) event.getDamager();
-            if (!AltitudeTag.getTagger().equals(tagger.getUniqueId()))
+            return;
+        }
+
+        final Player tagger = (Player) event.getDamager();
+        if (!AltitudeTag.getTagger().equals(tagger.getUniqueId()))
+        {
+            return;
+        }
+
+        final Player tagged = (Player) event.getEntity();
+
+        // add the new tag
+        AltitudeTag.addTag(tagger.getUniqueId(), () ->
+        {
+            // if they left, we can stop
+            if (!tagger.isOnline())
             {
                 return;
             }
 
-            final Player tagged = (Player) event.getEntity();
+            NotificationHandler.sendTaggerNotifications(tagger, tagged.getName());
+        });
 
-            // add the new tag
-            AltitudeTag.addTag(tagger.getUniqueId(), () ->
-            {
-                // if they left, we can stop
-                if (tagger.isOnline())
-                {
-                    NotificationHandler.sendTaggerNotifications(tagger, tagged.getName());
-                }
-            });
+        AltitudeTag.setTagger(tagged.getUniqueId(), TagCause.NORMAL);
 
-            AltitudeTag.setTagger(tagged.getUniqueId(), TagCause.NORMAL);
-
-            NotificationHandler.sendVictimTitle(tagged, false);
-        }
+        NotificationHandler.sendVictimTitle(tagged, false);
     }
 }
