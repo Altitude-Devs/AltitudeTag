@@ -114,17 +114,17 @@ public class AltitudeTag extends JavaPlugin
      *
      * @param tagger the new tagger.
      */
-    public static void setTagger(UUID tagger)
+    public static void setTagger(UUID tagger, TagCause cause)
     {
-        // announce that a new person is it
         Player previousPlayer = Bukkit.getPlayer(instance.tagger);
 
         if (tagger != null)
         {
-            NotificationHandler.sendGlobalNotifications(previousPlayer != null
-                                                        ? previousPlayer.getName()
-                                                        : null, Bukkit.getPlayer(tagger).getName());
+            NotificationHandler.sendGlobalNotifications(previousPlayer != null ? previousPlayer.getName() : null,
+                                                        Bukkit.getPlayer(tagger).getName(),
+                                                        cause);
         }
+        
         instance.tagger = tagger;
     }
 

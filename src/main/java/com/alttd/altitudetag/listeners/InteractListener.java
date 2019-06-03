@@ -2,6 +2,7 @@ package com.alttd.altitudetag.listeners;
 
 import com.alttd.altitudetag.AltitudeTag;
 import com.alttd.altitudetag.NotificationHandler;
+import com.alttd.altitudetag.TagCause;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,7 +33,7 @@ public class InteractListener implements Listener
                 }
             });
 
-            AltitudeTag.setTagger(tagged.getUniqueId());
+            AltitudeTag.setTagger(tagged.getUniqueId(), TagCause.NORMAL);
 
             NotificationHandler.sendVictimTitle(tagged, false);
         }

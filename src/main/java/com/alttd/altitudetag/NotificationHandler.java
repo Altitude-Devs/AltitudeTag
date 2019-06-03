@@ -64,15 +64,21 @@ public class NotificationHandler
         });
     }
 
-    public static void sendGlobalNotifications(String attacker, String victim)
+    public static void sendGlobalNotifications(String attacker, String victim, TagCause cause)
     {
-        if (attacker == null && Config.NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_ENABLED.getValue())
+        if (cause == TagCause.DISCONNECT_EMPTY)
+        {
+            return;
+        }
+
+        if (cause != TagCause.NORMAL && Config.NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_ENABLED.getValue())
         {
             // TODO make this actually do what it's supposed to
             Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(Lang.renderString(Config.NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_MESSAGE.getValue(),
                                                                                    "{target}", victim)));
         }
-        if (attacker != null && Config.NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_ENABLED.getValue())
+
+        if (cause == TagCause.NORMAL && Config.NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_ENABLED.getValue())
         {
             Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(Lang.renderString(Config.NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_MESSAGE.getValue(),
                                                                                    "{target}", victim,
