@@ -86,6 +86,12 @@ public final class Config
     public static final MutableValue<Integer> NOTIFICATION_GLOBAL_BOSS_BAR_PERCENT  = new MutableValue<>(0);
     public static final MutableValue<String>  NOTIFICATION_GLOBAL_BOSS_BAR_MESSAGE  = new MutableValue<>("&e{player} is 'it'! Don't let them tag you!");
 
+    public static final MutableValue<Boolean> TAG_BACKS_TRACK_LEADERBOARD = new MutableValue<>(false);
+    public static final MutableValue<String> TAG_BACKS_MESSAGE = new MutableValue<>("&e* Have fun, but tag-backs aren't regarded toward the leaderboard.");
+
+    public static final MutableValue<Boolean> TAG_DELAY_ENABLED  = new MutableValue<>(true);
+    public static final MutableValue<Integer> TAG_DELAY_DURATION = new MutableValue<>(60);
+    public static final MutableValue<String> TAG_DELAY_MESSAGE = new MutableValue<>("&e* Can't tag anyone within 5 seconds of becoming 'it'!");
 
     /**
      * Update the values from the config file.

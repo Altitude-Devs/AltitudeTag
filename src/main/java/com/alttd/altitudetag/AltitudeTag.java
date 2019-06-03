@@ -21,6 +21,7 @@ public class AltitudeTag extends JavaPlugin
     private static AltitudeTag instance;
 
     private UUID tagger;
+    private UUID prevTagger;
 
     private BossBar bossBar;
 
@@ -124,8 +125,19 @@ public class AltitudeTag extends JavaPlugin
                                                         Bukkit.getPlayer(tagger).getName(),
                                                         cause);
         }
-        
+
+        instance.prevTagger = instance.tagger;
         instance.tagger = tagger;
+    }
+
+    /**
+     * Returns the previous tagger.
+     *
+     * @return the previous tagger.
+     */
+    public static UUID getPreviousTagger()
+    {
+        return instance.prevTagger;
     }
 
     /**

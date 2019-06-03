@@ -164,7 +164,7 @@ public class Leaderboard
         {
             return;
         }
-        
+
         Objects.requireNonNull(hologram);
 
         Bukkit.getScheduler().runTaskAsynchronously(AltitudeTag.getInstance(), () ->

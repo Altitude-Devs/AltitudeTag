@@ -51,3 +51,10 @@ notification:
       # 0-100
       percent: 0
       message: "&e{player} is 'it'! Don't let them tag you!"
+tag-backs:
+  track-leaderboard: false
+  message: "&e* Have fun, but tag-backs aren't regarded toward the leaderboard."
+tag-delay:
+  enabled: true
+  duration: 60
+  message: "&e* Can't tag anyone within 5 seconds of becoming 'it'!"
