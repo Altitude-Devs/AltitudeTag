@@ -145,6 +145,13 @@ public final class Config
         updateValue(config, save, "notification.global.boss-bar.color", NOTIFICATION_GLOBAL_BOSS_BAR_COLOR);
         updateValue(config, save, "notification.global.boss-bar.percent", NOTIFICATION_GLOBAL_BOSS_BAR_PERCENT);
         updateValue(config, save, "notification.global.boss-bar.message", NOTIFICATION_GLOBAL_BOSS_BAR_MESSAGE);
+        
+        updateValue(config, save, "tag-backs.track-leaderboard", TAG_BACKS_TRACK_LEADERBOARD);
+        updateValue(config, save, "tag-backs.message", TAG_BACKS_MESSAGE);
+        
+        updateValue(config, save, "tag-delay.enabled", TAG_DELAY_ENABLED);
+        updateValue(config, save, "tag-delay.duration", TAG_DELAY_DURATION);
+        updateValue(config, save, "tag-delay.message", TAG_DELAY_MESSAGE);
 
         if (save.getValue())
         {
