@@ -1,7 +1,5 @@
 package com.alttd.altitudetag.listeners;
 
-import java.util.Optional;
-
 import com.alttd.altitudetag.AltitudeTag;
 import com.alttd.altitudetag.NotificationHandler;
 import com.alttd.altitudetag.TagCause;
@@ -41,13 +39,8 @@ public class ConnectionListener implements Listener
             return;
         }
 
-        Optional<? extends Player> optional = Bukkit.getOnlinePlayers().stream().filter(p -> p != event.getPlayer()).findAny();
-        if (!optional.isPresent())
-        {
-            throw new IllegalStateException("There is more than one player on but for some reason they are all: " + event.getPlayer().getUniqueId());
-        }
-        Player player = optional.get();
-        AltitudeTag.setTagger(player.getUniqueId(), TagCause.DISCONNECT_TRANSFER);
+        Player player = AltitudeTag.randomTagger(TagCause.DISCONNECT_TRANSFER, event.getPlayer());
+
         NotificationHandler.sendVictimTitle(player, false);
     }
 }

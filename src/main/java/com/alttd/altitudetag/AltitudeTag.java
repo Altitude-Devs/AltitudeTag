@@ -1,6 +1,7 @@
 package com.alttd.altitudetag;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -15,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 public class AltitudeTag extends JavaPlugin
 {
@@ -24,6 +26,8 @@ public class AltitudeTag extends JavaPlugin
     private UUID prevTagger;
 
     private BossBar bossBar;
+
+    private BukkitTask tagTimeLimitTask;
 
     /**
      * Enable the plugin
@@ -122,8 +126,15 @@ public class AltitudeTag extends JavaPlugin
         if (tagger != null)
         {
             NotificationHandler.sendGlobalNotifications(previousPlayer != null ? previousPlayer.getName() : null,
-                                                        Bukkit.getPlayer(tagger).getName(),
-                                                        cause);
+                    Bukkit.getPlayer(tagger).getName(), cause);
+
+            if (Config.TIME_LIMIT_ENABLED.getValue())
+            {
+                if (instance.tagTimeLimitTask != null && !instance.tagTimeLimitTask.isCancelled()) {
+                    instance.tagTimeLimitTask.cancel();
+                }
+                instance.tagTimeLimitTask = Bukkit.getScheduler().runTaskLater(instance, () -> randomTagger(TagCause.TIMEOUT, Bukkit.getPlayer(tagger)), Config.TIME_LIMIT_DURATION.getValue());
+            }
         }
 
         instance.prevTagger = instance.tagger;
@@ -153,6 +164,18 @@ public class AltitudeTag extends JavaPlugin
     public static void getTags(UUID uuid, Consumer<Integer> consumer)
     {
         Leaderboard.getTags(uuid, consumer);
+    }
+
+    public static Player randomTagger(TagCause cause, Player filtered)
+    {
+        Optional<? extends Player> optional = Bukkit.getOnlinePlayers().stream().filter(p -> p != filtered).findAny();
+        if (!optional.isPresent())
+        {
+            throw new IllegalStateException("Filtering failed. All players: " + filtered.getUniqueId());
+        }
+        Player player = optional.get();
+        AltitudeTag.setTagger(player.getUniqueId(), cause);
+        return player;
     }
 
     /**

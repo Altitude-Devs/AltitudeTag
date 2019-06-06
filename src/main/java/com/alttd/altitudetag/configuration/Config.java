@@ -93,6 +93,11 @@ public final class Config
     public static final MutableValue<Integer> TAG_DELAY_DURATION = new MutableValue<>(60);
     public static final MutableValue<String> TAG_DELAY_MESSAGE = new MutableValue<>("&e* Can't tag anyone within 5 seconds of becoming 'it'!");
 
+    public static final MutableValue<Boolean> TIME_LIMIT_ENABLED  = new MutableValue<>(true);
+    public static final MutableValue<Integer> TIME_LIMIT_DURATION = new MutableValue<>(1200);
+    public static final MutableValue<String>  TIME_LIMIT_MESSAGE  = new MutableValue<>(
+            "&e* Transferring 'it' since you've had it for awhile.");
+
     /**
      * Update the values from the config file.
      */
@@ -152,6 +157,10 @@ public final class Config
         updateValue(config, save, "tag-delay.enabled", TAG_DELAY_ENABLED);
         updateValue(config, save, "tag-delay.duration", TAG_DELAY_DURATION);
         updateValue(config, save, "tag-delay.message", TAG_DELAY_MESSAGE);
+
+        updateValue(config, save, "time-limit.enabled", TIME_LIMIT_ENABLED);
+        updateValue(config, save, "time-limit.duration", TIME_LIMIT_DURATION);
+        updateValue(config, save, "time-limit.message", TIME_LIMIT_MESSAGE);
 
         if (save.getValue())
         {

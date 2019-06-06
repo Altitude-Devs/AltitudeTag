@@ -58,3 +58,7 @@ tag-delay:
   enabled: true
   duration: 60
   message: "&e* Can't tag anyone within 5 seconds of becoming 'it'!"
+time-limit:
+  enabled: true
+  duration: 1200
+  message: "&e* Transferring 'it' since you've had it for awhile."
