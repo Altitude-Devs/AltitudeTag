@@ -39,7 +39,7 @@ public class InteractListener implements Listener
         }
 
         // add the new tag
-        if (!Config.TAG_BACKS_TRACK_LEADERBOARD.getValue() && AltitudeTag.getPreviousTagger().equals(tagged.getUniqueId()))
+        if (!Config.TAG_BACKS_TRACK_LEADERBOARD.getValue() && tagged.getUniqueId().equals(AltitudeTag.getPreviousTagger()))
         {
             tagger.sendMessage(Lang.renderString(Config.TAG_BACKS_MESSAGE.getValue()));
         }

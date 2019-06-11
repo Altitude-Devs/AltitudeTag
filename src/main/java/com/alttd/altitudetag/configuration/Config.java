@@ -51,8 +51,9 @@ public final class Config
 
     public static final MutableValue<Boolean> LEADERBOARD_ENABLED = new MutableValue<>(true);
     public static final MutableValue<String>  LEADERBOARD_TITLE   = new MutableValue<>("&b&lAltitude Tag Leaderboard");
-    public static final MutableValue<String>  LEADERBOARD_FORMAT  = new MutableValue<>("&6{rank}. &e{player} &7- &e{tags}");
     public static final MutableValue<Integer> LEADERBOARD_TOP     = new MutableValue<>(10);
+    public static final MutableValue<String>  LEADERBOARD_FORMAT  = new MutableValue<>(
+            "&6{rank}. &e{player} &7- &e{tags}");
 
     public static final MutableValue<String> LEADERBOARD_LOCATION_WORLD = new MutableValue<>("world");
     public static final MutableValue<Double> LEADERBOARD_LOCATION_X     = new MutableValue<>(10.0);
@@ -66,32 +67,39 @@ public final class Config
     public static final MutableValue<Integer> NOTIFICATION_VICTIM_TITLE_FADE_OUT = new MutableValue<>(0);
 
     public static final MutableValue<Boolean> NOTIFICATION_VICTIM_TITLE_SUB_TITLE_ENABLED = new MutableValue<>(true);
-    public static final MutableValue<String>  NOTIFICATION_VICTIM_TITLE_SUB_TITLE_MESSAGE = new MutableValue<>("&eYou're it!");
+    public static final MutableValue<String>  NOTIFICATION_VICTIM_TITLE_SUB_TITLE_MESSAGE = new MutableValue<>(
+            "&eYou're it!");
 
     public static final MutableValue<Boolean> NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_ENABLED = new MutableValue<>(true);
     public static final MutableValue<Integer> NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_LENGTH  = new MutableValue<>(60);
 
     public static final MutableValue<Boolean> NOTIFICATION_ATTACKER_CHAT_ENABLED = new MutableValue<>(true);
-    public static final MutableValue<String>  NOTIFICATION_ATTACKER_CHAT_MESSAGE = new MutableValue<>("&7You just tagged &e{target}&7! You have &e{amount}&7 total tags.");
+    public static final MutableValue<String>  NOTIFICATION_ATTACKER_CHAT_MESSAGE = new MutableValue<>(
+            "&7You just tagged &e{target}&7! You have &e{amount}&7 total tags.");
 
     public static final MutableValue<Boolean> NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_ENABLED = new MutableValue<>(true);
-    public static final MutableValue<String>  NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_MESSAGE = new MutableValue<>("&e* {attacker} tagged {target}, run!");
+    public static final MutableValue<String>  NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_MESSAGE = new MutableValue<>(
+            "&e* {attacker} tagged {target}, run!");
 
     public static final MutableValue<Boolean> NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_ENABLED = new MutableValue<>(true);
-    public static final MutableValue<String>  NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_MESSAGE = new MutableValue<>("&e*{target} is it now, run!");
+    public static final MutableValue<String>  NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_MESSAGE = new MutableValue<>(
+            "&e*{target} is it now, run!");
 
     public static final MutableValue<Boolean> NOTIFICATION_GLOBAL_BOSS_BAR_ENABLED  = new MutableValue<>(true);
     public static final MutableValue<Integer> NOTIFICATION_GLOBAL_BOSS_BAR_SEGMENTS = new MutableValue<>(0);
     public static final MutableValue<String>  NOTIFICATION_GLOBAL_BOSS_BAR_COLOR    = new MutableValue<>("YELLOW");
     public static final MutableValue<Integer> NOTIFICATION_GLOBAL_BOSS_BAR_PERCENT  = new MutableValue<>(0);
-    public static final MutableValue<String>  NOTIFICATION_GLOBAL_BOSS_BAR_MESSAGE  = new MutableValue<>("&e{player} is 'it'! Don't let them tag you!");
+    public static final MutableValue<String>  NOTIFICATION_GLOBAL_BOSS_BAR_MESSAGE  = new MutableValue<>(
+            "&e{player} is 'it'! Don't let them tag you!");
 
     public static final MutableValue<Boolean> TAG_BACKS_TRACK_LEADERBOARD = new MutableValue<>(false);
-    public static final MutableValue<String> TAG_BACKS_MESSAGE = new MutableValue<>("&e* Have fun, but tag-backs aren't regarded toward the leaderboard.");
+    public static final MutableValue<String>  TAG_BACKS_MESSAGE           = new MutableValue<>(
+            "&e* Have fun, but tag-backs aren't regarded toward the leaderboard.");
 
     public static final MutableValue<Boolean> TAG_DELAY_ENABLED  = new MutableValue<>(true);
     public static final MutableValue<Integer> TAG_DELAY_DURATION = new MutableValue<>(60);
-    public static final MutableValue<String> TAG_DELAY_MESSAGE = new MutableValue<>("&e* Can't tag anyone within 5 seconds of becoming 'it'!");
+    public static final MutableValue<String>  TAG_DELAY_MESSAGE  = new MutableValue<>(
+            "&e* Can't tag anyone within 5 seconds of becoming 'it'!");
 
     public static final MutableValue<Boolean> TIME_LIMIT_ENABLED  = new MutableValue<>(true);
     public static final MutableValue<Integer> TIME_LIMIT_DURATION = new MutableValue<>(1200);
@@ -135,25 +143,33 @@ public final class Config
         updateValue(config, save, "notification.victim.title.duration", NOTIFICATION_VICTIM_TITLE_DURATION);
         updateValue(config, save, "notification.victim.title.fade-in", NOTIFICATION_VICTIM_TITLE_FADE_IN);
         updateValue(config, save, "notification.victim.title.fade-out", NOTIFICATION_VICTIM_TITLE_FADE_OUT);
-        updateValue(config, save, "notification.victim.title.sub-title.enabled", NOTIFICATION_VICTIM_TITLE_SUB_TITLE_ENABLED);
-        updateValue(config, save, "notification.victim.title.sub-title.message", NOTIFICATION_VICTIM_TITLE_SUB_TITLE_MESSAGE);
-        updateValue(config, save, "notification.victim.title.join-delay.enabled", NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_ENABLED);
-        updateValue(config, save, "notification.victim.title.join-delay.length", NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_LENGTH);
+        updateValue(config, save, "notification.victim.title.sub-title.enabled",
+                NOTIFICATION_VICTIM_TITLE_SUB_TITLE_ENABLED);
+        updateValue(config, save, "notification.victim.title.sub-title.message",
+                NOTIFICATION_VICTIM_TITLE_SUB_TITLE_MESSAGE);
+        updateValue(config, save, "notification.victim.title.join-delay.enabled",
+                NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_ENABLED);
+        updateValue(config, save, "notification.victim.title.join-delay.length",
+                NOTIFICATION_VICTIM_TITLE_JOIN_DELAY_LENGTH);
         updateValue(config, save, "notification.attacker.chat.enabled", NOTIFICATION_ATTACKER_CHAT_ENABLED);
         updateValue(config, save, "notification.attacker.chat.message", NOTIFICATION_ATTACKER_CHAT_MESSAGE);
-        updateValue(config, save, "notification.global.chat.after-tag.enabled", NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_ENABLED);
-        updateValue(config, save, "notification.global.chat.after-tag.message", NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_MESSAGE);
-        updateValue(config, save, "notification.global.chat.other-reason.enabled", NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_ENABLED);
-        updateValue(config, save, "notification.global.chat.other-reason.message", NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_MESSAGE);
+        updateValue(config, save, "notification.global.chat.after-tag.enabled",
+                NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_ENABLED);
+        updateValue(config, save, "notification.global.chat.after-tag.message",
+                NOTIFICATION_GLOBAL_CHAT_AFTER_TAG_MESSAGE);
+        updateValue(config, save, "notification.global.chat.other-reason.enabled",
+                NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_ENABLED);
+        updateValue(config, save, "notification.global.chat.other-reason.message",
+                NOTIFICATION_GLOBAL_CHAT_OTHER_REASON_MESSAGE);
         updateValue(config, save, "notification.global.boss-bar.enabled", NOTIFICATION_GLOBAL_BOSS_BAR_ENABLED);
         updateValue(config, save, "notification.global.boss-bar.segments", NOTIFICATION_GLOBAL_BOSS_BAR_SEGMENTS);
         updateValue(config, save, "notification.global.boss-bar.color", NOTIFICATION_GLOBAL_BOSS_BAR_COLOR);
         updateValue(config, save, "notification.global.boss-bar.percent", NOTIFICATION_GLOBAL_BOSS_BAR_PERCENT);
         updateValue(config, save, "notification.global.boss-bar.message", NOTIFICATION_GLOBAL_BOSS_BAR_MESSAGE);
-        
+
         updateValue(config, save, "tag-backs.track-leaderboard", TAG_BACKS_TRACK_LEADERBOARD);
         updateValue(config, save, "tag-backs.message", TAG_BACKS_MESSAGE);
-        
+
         updateValue(config, save, "tag-delay.enabled", TAG_DELAY_ENABLED);
         updateValue(config, save, "tag-delay.duration", TAG_DELAY_DURATION);
         updateValue(config, save, "tag-delay.message", TAG_DELAY_MESSAGE);
@@ -176,9 +192,11 @@ public final class Config
      * @param location the location in the config.
      * @param mutable  the mutable value to update.
      */
-    private static <T> void updateValue(FileConfiguration config, MutableValue<Boolean> save, String location, MutableValue<T> mutable)
+    private static <T> void updateValue(FileConfiguration config, MutableValue<Boolean> save, String location,
+            MutableValue<T> mutable)
     {
-        if (!config.isSet(location) || !successful(() -> mutable.setValue(loadValue(config, mutable.getType(), location))))
+        if (!config.isSet(location) ||
+            !successful(() -> mutable.setValue(loadValue(config, mutable.getType(), location))))
         {
             error(location);
             config.set(location, mutable.getValue().toString());
@@ -218,7 +236,9 @@ public final class Config
      */
     private static void error(String location)
     {
-        AltitudeTag.getInstance().getLogger().severe("Error loading the config value '" + location + "'. Reverted it to default.");
+        AltitudeTag.getInstance()
+                .getLogger()
+                .severe("Error loading the config value '" + location + "'. Reverted it to default.");
     }
 
     @SuppressWarnings("unchecked")

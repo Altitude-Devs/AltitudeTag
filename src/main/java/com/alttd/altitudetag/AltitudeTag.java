@@ -17,6 +17,8 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AltitudeTag extends JavaPlugin
 {
@@ -146,6 +148,7 @@ public class AltitudeTag extends JavaPlugin
      *
      * @return the previous tagger.
      */
+    @Nullable
     public static UUID getPreviousTagger()
     {
         return instance.prevTagger;
@@ -156,7 +159,7 @@ public class AltitudeTag extends JavaPlugin
      *
      * @param uuid the player to add a tag for.
      */
-    public static void addTag(UUID uuid, Runnable runnable)
+    public static void addTag(@NotNull UUID uuid, @NotNull Runnable runnable)
     {
         Leaderboard.addTag(uuid, runnable);
     }
@@ -166,12 +169,13 @@ public class AltitudeTag extends JavaPlugin
         Leaderboard.getTags(uuid, consumer);
     }
 
-    public static Player randomTagger(TagCause cause, Player filtered)
+    public static Player randomTagger(@NotNull TagCause cause, @NotNull Player filtered)
     {
         Optional<? extends Player> optional = Bukkit.getOnlinePlayers().stream().filter(p -> p != filtered).findAny();
         if (!optional.isPresent())
         {
-            throw new IllegalStateException("Filtering failed. All players: " + filtered.getUniqueId());
+            AltitudeTag.setTagger(null, cause);
+            return null;
         }
         Player player = optional.get();
         AltitudeTag.setTagger(player.getUniqueId(), cause);
