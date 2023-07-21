@@ -1,13 +1,18 @@
+import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
+import java.net.URL
+
 plugins {
     `java-library`
     `maven-publish`
+    id("xyz.jpenilla.run-paper") version "1.0.6"
 }
 
 dependencies {
     compileOnly("com.alttd:Galaxy-API:1.20.1-R0.1-SNAPSHOT") {
         isChanging = true
     }
-    compileOnly("com.alttd:AltitudeAPI:LATEST")
+    compileOnly("com.alttd:AltitudeAPI:0.0.2")
     compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
     compileOnly("org.jetbrains:annotations:16.0.2")
     testImplementation("org.powermock:powermock-module-junit4:1.7.4")
@@ -50,5 +55,37 @@ tasks {
 
     withType<Javadoc> {
         options.encoding = Charsets.UTF_8.name()
+    }
+
+    jar {
+        archiveFileName.set("${rootProject.name}.jar")
+    }
+
+    runServer {
+        val dir = File(System.getProperty("user.home") + "/share/devserver/")
+        if (!dir.parentFile.exists()) {
+            dir.parentFile.mkdirs()
+        }
+        runDirectory.set(dir)
+
+        val fileName = "/galaxy.jar"
+        val file = File(dir.path + fileName)
+
+        if (!file.parentFile.exists()) {
+            file.parentFile.mkdirs()
+        }
+        if (!file.exists()) {
+            download("https://repo.destro.xyz/private/com/alttd/Galaxy-Server/Galaxy-paperclip-1.19.4-R0.1-SNAPSHOT-reobf.jar", file)
+        }
+        serverJar(file)
+        minecraftVersion("1.20.1")
+    }
+}
+
+fun download(link: String, path: File) {
+    URL(link).openStream().use { input ->
+        FileOutputStream(path).use { output ->
+            input.copyTo(output)
+        }
     }
 }

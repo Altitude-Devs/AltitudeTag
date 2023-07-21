@@ -2,6 +2,7 @@ rootProject.name = "AltitudeTag"
 
 dependencyResolutionManagement {
     repositories {
+        mavenLocal()
         mavenCentral()
         maven("https://repo.destro.xyz/snapshots") // Altitude - Galaxy
         maven("https://repo.codemc.io/repository/maven-public/")
