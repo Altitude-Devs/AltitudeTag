@@ -2,4 +2,4 @@ main: com.alttd.altitudetag.AltitudeTag
 name: AltitudeTag
 version: ${project.version}
 author: Michael Ziluck
-softdepend: [HolographicDisplays]
+depend: [AltitudeAPI, HolographicDisplays]
