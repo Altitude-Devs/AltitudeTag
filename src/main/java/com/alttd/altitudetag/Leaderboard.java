@@ -10,9 +10,8 @@ import java.util.function.Consumer;
 
 import com.alttd.altitudetag.configuration.Config;
 import com.alttd.altitudetag.configuration.Lang;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.hologram.line.TextHologramLine;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -134,7 +133,7 @@ public class Leaderboard
         config.set("leaderboard.location.z", Config.LEADERBOARD_LOCATION_Z.getValue());
         AltitudeTag.getInstance().saveConfig();
 
-        hologram.teleport(location);
+        hologram.setPosition(location);
         refreshLeaderboard();
     }
 
@@ -142,16 +141,16 @@ public class Leaderboard
     {
         if (Config.LEADERBOARD_ENABLED.getValue())
         {
-            hologram = HologramsAPI.createHologram(AltitudeTag.getInstance(),
+            hologram = AltitudeTag.getInstance().getHolographicDisplaysAPI().createHologram(
                                                    new Location(Bukkit.getWorld(Config.LEADERBOARD_LOCATION_WORLD.getValue()),
                                                                 Config.LEADERBOARD_LOCATION_X.getValue(),
                                                                 Config.LEADERBOARD_LOCATION_Y.getValue(),
                                                                 Config.LEADERBOARD_LOCATION_Z.getValue()));
-            hologram.appendTextLine(Config.LEADERBOARD_TITLE.getValue());
+            hologram.getLines().appendText(Config.LEADERBOARD_TITLE.getValue());
 
             for (int i = 0; i < Config.LEADERBOARD_TOP.getValue(); i++)
             {
-                hologram.appendTextLine("");
+                hologram.getLines().appendText((""));
             }
 
             refreshLeaderboard();
@@ -167,7 +166,7 @@ public class Leaderboard
 
         Objects.requireNonNull(hologram);
 
-        Bukkit.getScheduler().runTaskAsynchronously(AltitudeTag.getInstance(), () ->
+        Bukkit.getScheduler().runTask(AltitudeTag.getInstance(), () -> // should become async again
         {
             String sql = "SELECT player_uuid, player_tags FROM Player ORDER BY player_tags DESC LIMIT ?";
             try (PreparedStatement ps = TagConnection.getConnection().prepareStatement(sql))
@@ -189,9 +188,9 @@ public class Leaderboard
                     {
                         text = "";
                     }
-                    if (!((TextLine) hologram.getLine(finalInt + 1)).getText().equals(text))
+                    if (!((TextHologramLine) hologram.getLines().get(finalInt + 1)).getText().equals(text))
                     {
-                        Bukkit.getScheduler().runTask(AltitudeTag.getInstance(), () -> ((TextLine) hologram.getLine(finalInt + 1)).setText(text));
+                        Bukkit.getScheduler().runTask(AltitudeTag.getInstance(), () -> ((TextHologramLine) hologram.getLines().get(finalInt + 1)).setText(text));
                     }
                 }
             }

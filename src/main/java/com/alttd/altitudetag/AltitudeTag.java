@@ -12,6 +12,7 @@ import com.alttd.altitudetag.configuration.Config;
 import com.alttd.altitudetag.configuration.Lang;
 import com.alttd.altitudetag.listeners.ConnectionListener;
 import com.alttd.altitudetag.listeners.InteractListener;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
@@ -30,6 +31,8 @@ public class AltitudeTag extends JavaPlugin
     private BossBar bossBar;
 
     private BukkitTask tagTimeLimitTask;
+
+    private HolographicDisplaysAPI holographicDisplaysAPI;
 
     /**
      * Enable the plugin
@@ -63,6 +66,7 @@ public class AltitudeTag extends JavaPlugin
         {
             getLogger().severe("*** Could not connect to the database. ***");
             getLogger().severe("*** This plugin will be disabled. ***");
+            ex.printStackTrace();
             this.setEnabled(false);
             return;
         }
@@ -75,6 +79,7 @@ public class AltitudeTag extends JavaPlugin
 
         Bukkit.getPluginManager().registerEvents(new ConnectionListener(), this);
         Bukkit.getPluginManager().registerEvents(new InteractListener(), this);
+        holographicDisplaysAPI = HolographicDisplaysAPI.get(this);
     }
 
     private static void reloadConfiguration()
@@ -190,5 +195,9 @@ public class AltitudeTag extends JavaPlugin
     public static AltitudeTag getInstance()
     {
         return instance;
+    }
+
+    public HolographicDisplaysAPI getHolographicDisplaysAPI() {
+        return holographicDisplaysAPI;
     }
 }
