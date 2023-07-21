@@ -46,8 +46,8 @@ public class TagConnection
             {
                 return;
             }
-            Class.forName("org.mariadb.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mariadb://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
+//            Class.forName("org.mariadb.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
         }
     }
 
