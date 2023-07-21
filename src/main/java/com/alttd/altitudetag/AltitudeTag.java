@@ -128,7 +128,7 @@ public class AltitudeTag extends JavaPlugin
      */
     public static void setTagger(UUID tagger, TagCause cause)
     {
-        Player previousPlayer = Bukkit.getPlayer(instance.tagger);
+        Player previousPlayer = instance.tagger == null ? null : Bukkit.getPlayer(instance.tagger);
 
         if (tagger != null)
         {
