@@ -6,10 +6,11 @@ plugins {
     `java-library`
     `maven-publish`
     id("xyz.jpenilla.run-paper") version "1.0.6"
+    id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
 }
 
 dependencies {
-    compileOnly("com.alttd:Galaxy-API:1.20.1-R0.1-SNAPSHOT") {
+    compileOnly("com.alttd:Galaxy-API:1.20.4-R0.1-SNAPSHOT") {
         isChanging = true
     }
     compileOnly("com.alttd:AltitudeAPI:0.0.2")
@@ -19,8 +20,8 @@ dependencies {
     testImplementation("org.powermock:powermock-api-mockito2:1.7.4")
 }
 
-group = "com.alttd"
-version = "1.0.6"
+group = "com.alttd.altitudetag"
+version = System.getenv("BUILD_NUMBER") ?: gitCommit()
 description = "AltitudeTag"
 
 java {
@@ -75,10 +76,10 @@ tasks {
             file.parentFile.mkdirs()
         }
         if (!file.exists()) {
-            download("https://repo.destro.xyz/private/com/alttd/Galaxy-Server/Galaxy-paperclip-1.19.4-R0.1-SNAPSHOT-reobf.jar", file)
+            download("https://repo.destro.xyz/private/com/alttd/Galaxy-Server/Galaxy-paperclip-1.20.4-R0.1-SNAPSHOT-reobf.jar", file)
         }
         serverJar(file)
-        minecraftVersion("1.20.1")
+        minecraftVersion("1.20.4")
     }
 }
 
@@ -88,4 +89,22 @@ fun download(link: String, path: File) {
             input.copyTo(output)
         }
     }
+}
+
+fun gitCommit(): String {
+    val os = ByteArrayOutputStream()
+    project.exec {
+        commandLine = "git rev-parse --short HEAD".split(" ")
+        standardOutput = os
+    }
+    return String(os.toByteArray()).trim()
+}
+
+bukkit {
+    name = rootProject.name
+    main = "$group.${rootProject.name}"
+    version = "${rootProject.version}"
+    apiVersion = "1.20"
+    authors = listOf("Michael Ziluck", "destro174")
+    depend = listOf("AltitudeAPI", "HolographicDisplays")
 }

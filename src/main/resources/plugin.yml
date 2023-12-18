@@ -1,5 +1,0 @@
-main: com.alttd.altitudetag.AltitudeTag
-name: AltitudeTag
-version: ${project.version}
-author: Michael Ziluck
-depend: [AltitudeAPI, HolographicDisplays]
