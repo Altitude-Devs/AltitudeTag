@@ -5,12 +5,12 @@ import java.net.URL
 plugins {
     `java-library`
     `maven-publish`
-    id("xyz.jpenilla.run-paper") version "1.0.6"
+    id("xyz.jpenilla.run-paper") version "2.3.0"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
 }
 
 dependencies {
-    compileOnly("com.alttd:Galaxy-API:1.20.4-R0.1-SNAPSHOT") {
+    compileOnly("com.alttd:Galaxy-API:1.21-R0.1-SNAPSHOT") {
         isChanging = true
     }
     compileOnly("com.alttd:AltitudeAPI:0.0.2")
@@ -26,7 +26,7 @@ description = "AltitudeTag"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
