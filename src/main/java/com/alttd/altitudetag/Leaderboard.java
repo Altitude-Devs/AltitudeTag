@@ -145,11 +145,11 @@ public class Leaderboard
                     Config.LEADERBOARD_LOCATION_X.getValue(),
                     Config.LEADERBOARD_LOCATION_Y.getValue(),
                     Config.LEADERBOARD_LOCATION_Z.getValue()));
-            DHAPI.setHologramLine(hologram, 0, Config.LEADERBOARD_TITLE.getValue());
-            for (int i = 0; i < Config.LEADERBOARD_TOP.getValue(); i++)
+            for (int i = 0; i < Config.LEADERBOARD_TOP.getValue() + 1; i++)
             {
-                DHAPI.setHologramLine(hologram, 1 + i, "");
+                DHAPI.addHologramLine(hologram, "");
             }
+            DHAPI.setHologramLine(hologram, 0, Config.LEADERBOARD_TITLE.getValue());
 
             refreshLeaderboard();
         }
