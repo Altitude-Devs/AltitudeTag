@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 
 import com.alttd.altitudetag.configuration.Config;
 import com.alttd.altitudetag.configuration.Lang;
-import me.filoghost.holographicdisplays.api.hologram.Hologram;
-import me.filoghost.holographicdisplays.api.hologram.line.TextHologramLine;
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -133,7 +133,7 @@ public class Leaderboard
         config.set("leaderboard.location.z", Config.LEADERBOARD_LOCATION_Z.getValue());
         AltitudeTag.getInstance().saveConfig();
 
-        hologram.setPosition(location);
+        hologram.setLocation(location);
         refreshLeaderboard();
     }
 
@@ -141,16 +141,14 @@ public class Leaderboard
     {
         if (Config.LEADERBOARD_ENABLED.getValue())
         {
-            hologram = AltitudeTag.getInstance().getHolographicDisplaysAPI().createHologram(
-                                                   new Location(Bukkit.getWorld(Config.LEADERBOARD_LOCATION_WORLD.getValue()),
-                                                                Config.LEADERBOARD_LOCATION_X.getValue(),
-                                                                Config.LEADERBOARD_LOCATION_Y.getValue(),
-                                                                Config.LEADERBOARD_LOCATION_Z.getValue()));
-            hologram.getLines().appendText(Config.LEADERBOARD_TITLE.getValue());
-
+            hologram = getOrCreateHologram(new Location(Bukkit.getWorld(Config.LEADERBOARD_LOCATION_WORLD.getValue()),
+                    Config.LEADERBOARD_LOCATION_X.getValue(),
+                    Config.LEADERBOARD_LOCATION_Y.getValue(),
+                    Config.LEADERBOARD_LOCATION_Z.getValue()));
+            DHAPI.setHologramLine(hologram, 0, Config.LEADERBOARD_TITLE.getValue());
             for (int i = 0; i < Config.LEADERBOARD_TOP.getValue(); i++)
             {
-                hologram.getLines().appendText((""));
+                DHAPI.setHologramLine(hologram, 1 + i, "");
             }
 
             refreshLeaderboard();
@@ -175,7 +173,6 @@ public class Leaderboard
                 ResultSet rs = ps.executeQuery();
                 for (int i = 0; i < Config.LEADERBOARD_TOP.getValue(); i++)
                 {
-                    final int finalInt = i;
                     String text;
                     if (rs != null && rs.next())
                     {
@@ -188,10 +185,7 @@ public class Leaderboard
                     {
                         text = "";
                     }
-                    if (!((TextHologramLine) hologram.getLines().get(finalInt + 1)).getText().equals(text))
-                    {
-                        Bukkit.getScheduler().runTask(AltitudeTag.getInstance(), () -> ((TextHologramLine) hologram.getLines().get(finalInt + 1)).setText(text));
-                    }
+                    DHAPI.setHologramLine(hologram, 1 + i, text);
                 }
             }
             catch (SQLException ex)
@@ -200,5 +194,13 @@ public class Leaderboard
             }
         });
 
+    }
+
+    public static Hologram getOrCreateHologram(Location location) {
+        Hologram hologram1 = DHAPI.getHologram("TagLeaderBoard");
+        if (hologram1 != null)
+            return hologram1;
+
+        return DHAPI.createHologram("TagLeaderBoard", location);
     }
 }

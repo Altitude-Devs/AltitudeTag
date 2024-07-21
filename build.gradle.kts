@@ -14,7 +14,7 @@ dependencies {
         isChanging = true
     }
     compileOnly("com.alttd:AltitudeAPI:0.0.2")
-    compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
+    compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.9")
     compileOnly("org.jetbrains:annotations:16.0.2")
     testImplementation("org.powermock:powermock-module-junit4:1.7.4")
     testImplementation("org.powermock:powermock-api-mockito2:1.7.4")
@@ -104,7 +104,7 @@ bukkit {
     name = rootProject.name
     main = "$group.${rootProject.name}"
     version = "${rootProject.version}"
-    apiVersion = "1.20"
+    apiVersion = "1.21"
     authors = listOf("Michael Ziluck", "destro174")
-    depend = listOf("AltitudeAPI", "HolographicDisplays")
+    depend = listOf("AltitudeAPI", "DecentHolograms")
 }
